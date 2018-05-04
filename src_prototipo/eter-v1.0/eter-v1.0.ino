@@ -1,54 +1,31 @@
 /*
  * Eter v1.0
- * El prototipo Eter v1.0 mide la calidad de aire mediante el sensor 
- * de particulas Sharp GP2Y1010AU0F y mide la temperatura y humedad relativa 
- * mediante el sensor DHTXX.
- * Para más información revisar el repositorio en
- * http://
+ * https://github.com/rlyehlab/eter-monitor
  * 
- * Este codigo está licenciado bajo ...
 */
 
 
-#include <DHT11.h>
+#include <DHT.h>
 #include "red.h"
 
-//variables geográficas
 char *lugar = "AREA_RECON";
 
-/*
- *Definición de pins y variables constantes
- */
-#define DELAY DHT11_RETRY_DELAY //delay comun
+
 #define DHTPIN D2  //DHT 
-#define LED_DUST D3 // dust sensor led
-#define MED_DUST A0 //dust sensor measure
+#define DHTTYPE DHT22  //DHT 
 
-#define samplingTime 280 //dust_sensor
-#define deltaTime 40 //dust_sensor
-#define sleepTime 9680 //dust_sensor
-
+DHT dht(DHTPIN, DHTTYPE); 
 
 struct dht_med{
   float tem;
   float hum;
 };
-/*
- * Definición de clases y estructuras
- */
-DHT11 dht11(DHTPIN); 
+
+
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-/*
- * Definición de variables
- */
-
-long lastMsg = 0;
-char msg[50];
-int value = 0;
-
-//topico : "AREA_RECON/DHT22/HUM/"
+//topic : "AREA_RECON/DHT22/HUM/"
 char *topico = "";
 
 
@@ -58,7 +35,6 @@ void setup() {
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
-  pinMode(LED_DUST, OUTPUT);
   pinMode(DHTPIN, INPUT);
   //dht.begin();
 
@@ -123,44 +99,21 @@ void reconnect() {
 
 
 
-float dust_sensor(){
-
-  float dustDensity;
-
-  //medicion
-  digitalWrite(LED_DUST,LOW); 
-  delayMicroseconds(samplingTime);
-  float voMeasured = analogRead(MED_DUST); 
-  delayMicroseconds(deltaTime);
-  digitalWrite(LED_DUST,HIGH); // turn the LED off
-  delayMicroseconds(sleepTime);
-  float calcVoltage = voMeasured * (3.3 / 1024);
-  float dust = 0.17 * calcVoltage - 0.1;
-  //fin medicion
-  
-  Serial.print(dust);
-  
-  
-  return dust;
+int dust_sensor(){
+  //function for dust sensor
+  return 0;
 }
 
 
 dht_med dht_sensor(){
 
-  dht_med measure;
-  int err;
-  float temp;
-  float hum;
-  if((err=dht11.read(hum, temp))==0)
-  {  
-    measure.hum = hum;
-    measure.tem = temp;
-  }
-  else
-  {
+  dht_med measure; //define struct dht_med
+
+  measure.hum = dht.readHumidity();
+  measure.tem = dht.readTemperature();
+  if (isnan(measure.hum) || isnan(measure.tem)){
     Serial.println();
-    Serial.print("Error No :");
-    Serial.print(err);
+    Serial.print("Error DHT:");
     Serial.println();    
   }
   return measure;
@@ -185,18 +138,14 @@ void loop() {
   }
   client.loop();
   
-    char DUS_measure[6]= "";
     char TEM_measure[6]= "";
     char HUM_measure[6]= "";
-    //tempHum dht_measure = dht_sensor();
-    float dust_med = dust_sensor();
+
     dht_med measure = dht_sensor();
     float tem_med = measure.tem;
     float hum_med = measure.hum;
     
     Serial.println(".......................");
-    Serial.print("dust:");
-    Serial.println(dust_med);
     Serial.print("temp:");
     Serial.println(tem_med);
     Serial.print("hum:");
@@ -204,12 +153,13 @@ void loop() {
     Serial.println(".......................");
 
     // Publicar mediciones de sensores ........
-    sprintf(DUS_measure, "%.02f", dust_med); //convertir a char*
+    //sprintf(DUS_measure, "%.02f", dust_med); //convertir a char*
     sprintf(TEM_measure, "%.02f", tem_med); //convertir a char*
     sprintf(HUM_measure, "%.02f", hum_med); //convertir a char*
-    pub("AREA_RECON/DUST_SENSOR/DUS", DUS_measure);
+    //pub("AREA_RECON/DUST_SENSOR/DUS", DUS_measure);
     pub("AREA_RECON/DHT22/TEM", TEM_measure);
     pub("AREA_RECON/DHT22/HUM", HUM_measure);
+    //
 
   delay(5000);
 }

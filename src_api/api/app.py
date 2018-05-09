@@ -2,7 +2,7 @@
 from flask import Flask
 from api.views import blueprints
 from api.client import mqtt
-from api.models import db
+from api.models import db Measure
 
 
 app = Flask(__name__)
@@ -23,7 +23,6 @@ for bp in blueprints:
     app.register_blueprint(bp)
 
 
-db.create_all(app=app)
 
 
 mqtt.init_app(app)
@@ -31,7 +30,6 @@ mqtt.init_app(app)
 @mqtt.on_connect()
 def handle_connect(client, userdata, flags, rc):
     mqtt.subscribe('AREA_RECON/#')
-
 
 @mqtt.on_message()
 def handle_mqtt_message(client, userdata, message):
@@ -44,3 +42,4 @@ def handle_mqtt_message(client, userdata, message):
 
 
 
+db.create_all(app=app)

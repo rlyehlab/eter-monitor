@@ -9,8 +9,7 @@ client = Blueprint('client', __name__)
 
 @client.route('/topic/<name>')
 def topic(name):
-
-    mqtt.subscribe(name+'/#')
-    #measure = fetch_measure.delay()
-    #measure.wait()
     return str(name)
+
+
+

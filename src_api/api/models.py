@@ -22,20 +22,3 @@ class Measure(Base):
 
 
 
-
-class User(Base):
-
-    name =  ""
-    email = ""
-
-
-
-
-class Device(Base):
-
-    zone  = ""
-
-
-
-
-

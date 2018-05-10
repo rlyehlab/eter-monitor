@@ -1,7 +1,7 @@
 # LICENSE
 
-- [Hardware](#Hardware)
-- [Software](# Software)
+- [Hardware](https://github.com/rlyehlab/eter-monitor/blob/master/LICENSE.md#hardware-cern-open-hardware-licence-v12)
+- [Software](https://github.com/rlyehlab/eter-monitor/blob/master/LICENSE.md#software-gplv3)
 
 ## Hardware: CERN Open Hardware Licence v1.2 
 

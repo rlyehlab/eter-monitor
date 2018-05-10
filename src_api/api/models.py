@@ -44,7 +44,7 @@ class Measure(Base):
     sensor = relationship('Sensor')
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'))
     device = relationship('Device')
-    value = db.Column(db.Unicode(6), nullable=False)
+    value = db.Column(db.Unicode(10), nullable=False)
 
 
 

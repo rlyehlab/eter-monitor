@@ -1,7 +1,7 @@
 # LICENSE
 
-- [Hardware](#Hardware-CERN-Open-Hardware-Licence-v1.2)
-- [Software](#Software-GPLv3)
+- [Hardware](#Hardware)
+- [Software](# Software)
 
 ## Hardware: CERN Open Hardware Licence v1.2 
 

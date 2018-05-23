@@ -6,7 +6,7 @@ The first step will be to update the repositories and install pip3 by typing:
 
 `
 sudo apt install update  
-sudo apt install python-pip3
+sudo apt install python3-pip
 `
 
 Next we will install virtualenv using pip
@@ -30,7 +30,7 @@ Move into folder **src_api** and create a folder **venv**, where we install the 
 
 `
 src_api$ virtualenv venv  
-src_api$ venv/bin/pip install -r requeriments.txt
+src_api$ venv/bin/pip install -r requirements.txt
 `
 Now, run the project with
 

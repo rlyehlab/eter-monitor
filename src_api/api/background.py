@@ -21,24 +21,20 @@ def create_client_mqtt():
         while True:
             if client2mqtt._state_msg:
                 data_mqtt = client2mqtt._data_payload
-                print("save....")
                 measure_save(data_mqtt)
                 client2mqtt._state_msg = False
     return True
 
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
+    print("Connected with result code "+ str(rc))
     client.subscribe('AREA_RECON/#')
 
 
 def on_message(client, userdata, msg):
     client._state_msg = True
-    print(msg.topic)
     time.sleep(1)
     client.process_msg(msg)
-    print("process.....")
-    #client._state_msg = False
 
 
 def client_mqtt():
@@ -50,7 +46,6 @@ def client_mqtt():
 
 
 def measure_db(data):
-    print("almacenando data")
     measure = Measure()
     measure.sensor_id = data['id_sensor']
     measure.device_id = data['id_device']
@@ -66,14 +61,13 @@ def measure_save(data_mqtt):
                 Device.geolocation == data_mqtt['geoloc']
                 ).first()
         q_sensor = db.session.query(Sensor).filter(
-                Sensor.name == data_mqtt['sensor'],
+                Sensor.name.like(data_mqtt['sensor']+'%'),
                 Sensor.variable.like(data_mqtt['variable']+'%')
                 ).first()
 
         data['id_device'] = q_device.id
         data['id_sensor'] = q_sensor.id
         data['value'] = data_mqtt['value']
-        print(data)
         db.session.add(measure_db(data))
     db.session.commit()
     return True

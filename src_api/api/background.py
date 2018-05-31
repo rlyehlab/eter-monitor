@@ -11,12 +11,12 @@ celery = Celery(__name__, backend=BACKEND, broker=BROKER)
 
 
 @celery.task
-def create_client_mqtt():
+def create_client_mqtt(broker_config):
     from api.app import create_app
     app = create_app()
     db.init_app(app)
     with app.app_context():
-        client2mqtt = client_mqtt()
+        client2mqtt = client_mqtt(broker_config)
         client2mqtt.loop_start()
         while True:
             if client2mqtt._state_msg:
@@ -26,22 +26,34 @@ def create_client_mqtt():
     return True
 
 
+#@celery.task
+#def set_broker(name):
+
+
+
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+ str(rc))
-    client.subscribe('AREA_RECON/#')
+    client.subscribe(client._data_topic)
 
 
 def on_message(client, userdata, msg):
+
     client._state_msg = True
+    print(msg.topic + ' : '+ msg.payload.decode('utf-8'))
     time.sleep(1)
     client.process_msg(msg)
 
 
-def client_mqtt():
+def client_mqtt(broker_config):
+    topic_name = broker_config['topic']
+    broker_name = broker_config['broker']
+    port_name = broker_config['port']
+    #port_name = 1883
     client = ClientMqtt()
     client.on_connect = on_connect
     client.on_message = on_message
-    client.connect("localhost", 1883)
+    client._data_topic = topic_name
+    client.connect(broker_name, port_name)
     return client
 
 

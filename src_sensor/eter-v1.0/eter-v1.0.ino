@@ -30,6 +30,7 @@ struct dht_med{
 
 
 struct pm_med{
+  int check;
   float pm_1;
   float pm_2_5;
   float pm_10;
@@ -39,15 +40,13 @@ struct pm_med{
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-//topic : "AREA_RECON/DHT22/HUM/"
 char *topico = "";
 
 
 
 void setup() {
   Serial.begin(9600); //configure the baudrate pm5003
-  Serial.setTimeout(1500); //set the Timeout to 1500ms
-  //Serial.begin(115200);
+  //Serial.setTimeout(1500); //set the Timeout to 1500ms
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
@@ -62,53 +61,50 @@ void loop() {
     reconnect();
   }
   client.loop();
+  pm_med pm_measure = pm_sensor();
+  if (pm_measure.check){
+      char TEM_measure[6]= "";
+      char HUM_measure[6]= "";
+      char PM1_measure[6]= "";
+      char PM2_5_measure[6]= "";
+      char PM10_measure[6]= "";
   
-    char TEM_measure[6]= "";
-    char HUM_measure[6]= "";
-    char PM1_measure[6]= "";
-    char PM2_5_measure[6]= "";
-    char PM10_measure[6]= "";
-
-    dht_med dht_measure = dht_sensor();
-    pm_med pm_measure = pm_sensor();
-    float tem_med = dht_measure.tem;
-    float hum_med = dht_measure.hum;
-    float pm1 = pm_measure.pm_1;
-    float pm2_5 = pm_measure.pm_2_5;    
-    float pm10 = pm_measure.pm_10;
-        
-
-    // Publicar mediciones de sensores ........
-    //sprintf(DUS_measure, "%.02f", dust_med); //convertir a char*
-    sprintf(TEM_measure, "%.02f", tem_med); //convertir a char*
-    sprintf(HUM_measure, "%.02f", hum_med); //convertir a char*
-    sprintf(PM1_measure, "%.02f", pm1); //convertir a char*
-    sprintf(PM2_5_measure, "%.02f", pm2_5); //convertir a char*
-    sprintf(PM10_measure, "%.02f", pm10); //convertir a char*
-    //pub("AREA_RECON/DUST_SENSOR/DUS", DUS_measure);
-    pub("AREA_RECON/DHT22/TEM", TEM_measure);
-    pub("AREA_RECON/DHT22/HUM", HUM_measure);
-    pub("AREA_RECON/PM5003/PM1", PM1_measure);
-    pub("AREA_RECON/PM5003/PM2.5", PM2_5_measure );
-    pub("AREA_RECON/PM5003/PM10", PM10_measure );
-    
-  delay(5000);
+      dht_med dht_measure = dht_sensor();
+      
+      float tem_med = dht_measure.tem;
+      float hum_med = dht_measure.hum;
+      float pm1 = pm_measure.pm_1;
+      float pm2_5 = pm_measure.pm_2_5;    
+      float pm10 = pm_measure.pm_10;
+          
+  
+      // Publicar mediciones de sensores ........
+      sprintf(TEM_measure, "%.02f", tem_med); //convertir a char*
+      sprintf(HUM_measure, "%.02f", hum_med); //convertir a char*
+      sprintf(PM1_measure, "%.02f", pm1); //convertir a char*
+      sprintf(PM2_5_measure, "%.02f", pm2_5); //convertir a char*
+      sprintf(PM10_measure, "%.02f", pm10); //convertir a char*
+      pub("AREA_RECON/DHT22/TEM", TEM_measure);
+      pub("AREA_RECON/DHT22/HUM", HUM_measure);
+      pub("AREA_RECON/PM5003/PM1", PM1_measure);
+      pub("AREA_RECON/PM5003/PM2.5", PM2_5_measure );
+      pub("AREA_RECON/PM5003/PM10", PM10_measure );
+    delay(30000);
+   }
 }
 
 pm_med pm_sensor(){
 
   pm_med pm_measure;
-
+  pm_measure.check = 0; 
   if (Serial.find(0x42)) {
     Serial.readBytes(buf, PMArrayLenth);
     if (buf[0] == 0x4d) {
       if (checkValue(buf, PMArrayLenth)) {
+        pm_measure.check = 1;         
         pm_measure.pm_1 = transmitPM01(buf); 
-        //PM01Value = transmitPM01(buf);
         pm_measure.pm_2_5 = transmitPM2_5(buf);
-        //PM2_5Value = transmitPM2_5(buf);
         pm_measure.pm_10 = transmitPM10(buf);
-        //PM10Value = transmitPM10(buf);
       }
     }
   }
@@ -119,7 +115,6 @@ pm_med pm_sensor(){
 void setup_wifi() {
 
   delay(10);
-  // We start by connecting to a WiFi network
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -152,21 +147,16 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 
 void reconnect() {
-  // Loop until we're reconnected
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
-    // Attempt to connect
     if (client.connect("ESP8266Client")) {
       Serial.println("connected");
-      // Once connected, publish an announcement...
       client.publish("outTopic", "hello world");
-      // ... and resubscribe
       client.subscribe("inTopic");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
       Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
       delay(5000);
     }
   }

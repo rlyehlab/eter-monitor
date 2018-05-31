@@ -9,6 +9,7 @@ class ClientMqtt(Client):
         Client.__init__(self, client_id="", clean_session=True, userdata=None,
                 protocol=MQTTv311, transport="tcp")
         self._data_payload = dict()
+        self._data_topic = ""
         self._state_msg = None
 
 
@@ -27,7 +28,4 @@ class ClientMqtt(Client):
         #self._state_msg = True
         return True
 
-
-    def data_getter(self):
-        pass
 

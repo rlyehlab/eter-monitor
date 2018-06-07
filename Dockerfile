@@ -1,14 +1,11 @@
 FROM debian:9-slim
 
-
-#RUN mkdir /home/src
-
-WORKDIR   /src_api
-
 RUN apt-get update  && \
     apt-get install  python3-pip  -y
    
 ADD  /src_api /src_api
+
+WORKDIR   /src_api
 
 RUN pip3 install -r /src_api/requirements.txt
 

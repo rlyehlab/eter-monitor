@@ -26,11 +26,6 @@ def create_client_mqtt(broker_config):
     return True
 
 
-#@celery.task
-#def set_broker(name):
-
-
-
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+ str(rc))
     client.subscribe(client._data_topic)

@@ -19,6 +19,7 @@ unsigned char buf[PMArrayLenth];
 int PM01Value = 0; //define PM1.0 value
 int PM2_5Value = 0; //define PM2.5 value
 int PM10Value = 0; //define PM10 value
+int TIME_DELAY = 30000;
 
 
 DHT dht(DHTPIN, DHTTYPE); 
@@ -89,7 +90,7 @@ void loop() {
       pub("AREA_RECON/PM5003/PM1", PM1_measure);
       pub("AREA_RECON/PM5003/PM2.5", PM2_5_measure );
       pub("AREA_RECON/PM5003/PM10", PM10_measure );
-    delay(30000);
+    delay(TIME_DELAY);
    }
 }
 

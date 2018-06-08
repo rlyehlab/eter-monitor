@@ -2,7 +2,7 @@
 from flask import Flask
 from api.views import blueprints
 from api.models import db, Measure
-
+import os
 
 
 
@@ -12,7 +12,7 @@ def create_app():
 
     app.config['MQTT_KEEPALIVE'] = 5
     app.config['MQTT_TLS_ENABLED'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:eter2018@localhost/eter'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
     for bp in blueprints:
         app.register_blueprint(bp)

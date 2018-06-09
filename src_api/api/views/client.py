@@ -1,19 +1,24 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 from api.background import create_client_mqtt
-
+from api.forms import Register
 
 client = Blueprint('client', __name__)
 
 
-@client.route('/<broker_config>')
-def index(broker_config):
+@client.route('/register')
+def register():
+    form = Register()
+    if form.validate_on_submit():
+        broker = form.broker.data
+        geoloc = form.geoloc.data
+        port = form.port.data
     broker_config = {
-            'topic':'AREA_RECON/#',
-            'broker':'localhost',
-            'port':1883}
+            'topic':geoloc,
+            'broker':broker,
+            'port':port}
     print(broker_config)
     task_client = create_client_mqtt.delay(broker_config)
-    return str("Measure ....")
+    return render_template('register.html', form=form)
 
 
 

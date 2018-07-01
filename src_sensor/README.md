@@ -15,7 +15,7 @@ Se utiliza el microcontrolador NodeMCU que está basado en la placa ESP8266 para
 
 ### Instalar modelo de placa ESP8266
 
-Si bien NodeMCU no es una placa de la marca arduino, nos valemos del ide para cargar el código, para ello debemos descargar y seleccionar la placa correspondiente a nuesto modelo.
+Si bien NodeMCU no es una placa de la marca arduino, nos valemos del ide para cargar el código, para ello debemos descargar y seleccionar la placa correspondiente a nuestro modelo.
 
 En el menú, en la sección de archivo nos vamos a preferencias e introducimos la siguiente dirección:
 
@@ -26,24 +26,24 @@ http://arduino.esp8266.com/versions/2.4.1/package_esp8266com_index.json
 
 Luego en el menú de herramientas seleccionamos placas y nos dirigimos a la parte de *Gestor de tarjetas* e instalamos el modelo **esp8266**
 
-### Instalar librerías
+### Instalar librerias
 
-Se necesitan instalar librerías adicionales para el funcionamiento de los sensosres y del protocolo mqtt. Las librerías son:
+Se necesitan instalar librerías adicionales para el funcionamiento de los sensores y del protocolo mqtt. Las librerías son:
 
 - [DHT](https://github.com/adafruit/DHT-sensor-library)
 - [Adafruit Unified Sensor](https://pubsubclient.knolleary.net/)
 - [PubSubClient](https://pubsubclient.knolleary.net/)
 
-Para instalar las librerías debemos ir al menú de Arduino Ide, seleccionar *Programa->incluidr librerías->gestor de librerías* y luego buscarlas e instalar cada una.
+Para instalar las librerías debemos ir al menú de Arduino Ide, seleccionar *Programa->incluir librerías->gestor de librerías* y luego buscarlas e instalar cada una.
 
 
-## Cargando el codigo y configurando la placa
+## Cargando el código y configurando la placa
 
 Clonamos el repositorio 
 
 ```git clone https://github.com/rlyehlab/eter-monitor.git
 ```
-o podemos solo descargar la carpeta *src_sensor* en la cual se encuenta el código para el arduino. Ahí podrás ver los siguientes archivos:
+o podemos solo descargar la carpeta *src_sensor* en la cual se encuentra el código para el arduino. Ahí podrás ver los siguientes archivos:
 
 - config.h
 - eter-v1.0.ino

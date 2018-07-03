@@ -41,7 +41,8 @@ Para instalar las librerías debemos ir al menú de Arduino Ide, seleccionar *Pr
 
 Clonamos el repositorio 
 
-```git clone https://github.com/rlyehlab/eter-monitor.git
+```
+git clone https://github.com/rlyehlab/eter-monitor.git
 ```
 o podemos solo descargar la carpeta *src_sensor* en la cual se encuentra el código para el arduino. Ahí podrás ver los siguientes archivos:
 

@@ -60,3 +60,8 @@ Desde Arduino Ide nos dirigimos al archivo *eter-v1.0.ino* y deberán abrirse lo
 mqtt_server corresponde a la ip del broker, que en este caso apuntaremos al nodo de [R'lyeh](https://rlab.be/).
 
 Finalmente cargamos el código en la placa y ya debería estar midiendo y reportando. Puedes ver los mensajes en la parte superior derecha del arduino ide en el icono de la lupa, esto despliega una venta con el monitor del puerto serial.
+
+
+```
+mosquitto_sub -h <brocker>  -p 1883 -v -t "ETER/#"
+```

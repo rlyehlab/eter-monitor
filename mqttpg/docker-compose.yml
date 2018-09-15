@@ -1,0 +1,16 @@
+version: '3'
+services:
+  db:
+    image: postgres:9.5
+    env_file: '.env'
+    volumes:
+      - ./sql:/sql
+    container_name: eter_db
+  mqttpg:
+    env_file: '.env'
+    build: .
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    container_name: eter_mqttpg

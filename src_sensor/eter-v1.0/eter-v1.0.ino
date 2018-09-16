@@ -22,13 +22,16 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 String pm_json;
 String dht_json;
+String macadd;
 
   
 void setup() {
   Serial.begin(9600); 
   Serial.setTimeout(1500); 
   setup_wifi();
-  
+  //TODO: meter macaddress en el topic directamente
+  macadd = WiFi.macAddress();
+  Serial.print(macadd);  
   dht_init();
   delay(30000);//pms5003 necesita 30 segundos para empezar a medir.
   

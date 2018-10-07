@@ -6,6 +6,7 @@ services:
     volumes:
       - ./sql:/sql
     container_name: eter_db
+
   mqttpg:
     env_file: '.env'
     build: .
@@ -14,3 +15,13 @@ services:
     depends_on:
       - db
     container_name: eter_mqttpg
+
+  metabase:
+    image: metabase/metabase
+    env_file: '.env'
+    container_name: metabase
+    ports:
+      - "2448:3000"
+    depends_on:
+      - db
+

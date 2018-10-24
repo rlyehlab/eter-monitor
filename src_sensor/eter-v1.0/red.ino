@@ -1,13 +1,13 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-const char* MQTT_SERVER= "...";
+const char* MQTT_SERVER= "....";
 const uint16_t MQTT_PORT = 1883;
 
 void setup_wifi() {
   delay(10);
   Serial.println();
-  Serial.print("Connecting to ");
+  Serial.print("Connecting");
   Serial.println(SSID_W);
   WiFi.begin(SSID_W, PASSWORD);
 
@@ -26,15 +26,14 @@ void setup_wifi() {
 
 void reconnect() {
   while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
+    Serial.print("Trying to connect");
     if (client.connect("ESP8266Client")) {
-      Serial.println("connected");
-     // client.publish("outTopic", "hello world");
+      Serial.println("Connected");
       client.subscribe("inTopic");
     } else {
-      Serial.print("failed, rc=");
+      Serial.print("Failed connection");
       Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
+      Serial.println(" trying again ...");
       delay(5000);
     }
   }
@@ -67,9 +66,9 @@ void pub(char* topico, String msg){
   Serial.print(msg);
 
   if (!  client.publish(topico, mbuffer)) {
-      Serial.println("\n No se pudo publicar");
+      Serial.println("\n We had a problem publishing");
     } else {
-      Serial.println("\n Se publico OK!");
+      Serial.println("\n Message sent!");
     }
 
   

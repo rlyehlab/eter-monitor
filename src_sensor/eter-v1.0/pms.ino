@@ -1,5 +1,5 @@
 const int PMArrayLength=31;
-unsigned char buf[PMArrayLength];
+//unsigned char buf2[PMArrayLength];
 
 pmsData pm_sensor(){
   pmsData pm_measure;
@@ -31,7 +31,7 @@ pmsData pm_sensor(){
         pm_measure.particles_50um  = getData(23,24,buf);
         pm_measure.particles_100um  = getData(25,26,buf);
        **/
-      }
+     }
     }
   }
   return pm_measure;

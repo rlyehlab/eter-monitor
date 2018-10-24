@@ -1,4 +1,3 @@
-
 /*
  * Eter v1.0
  * https://github.com/rlyehlab/eter-monitor
@@ -12,6 +11,7 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
+#include <TimeLib.h>
 
 void dht_init();
 void setup_wifi();
@@ -23,17 +23,24 @@ PubSubClient client(espClient);
 String pm_json;
 String dht_json;
 String macadd;
+int secint;
 
-  
+byte buf[26];  //serial read buffer
+
+
+
+char topic_dht[90];
+char topic_pms[90];
+char sec[3];
+
 void setup() {
   Serial.begin(9600); 
   Serial.setTimeout(1500); 
   setup_wifi();
-  //TODO: meter macaddress en el topic directamente
   macadd = WiFi.macAddress();
-  Serial.print(macadd);  
+  Serial.print(macadd);
   dht_init();
-  delay(30000);//pms5003 necesita 30 segundos para empezar a medir.
+  delay(5000);//pms5003 necesita 30 segundos para empezar a medir.
   
 }
 
@@ -50,22 +57,40 @@ void loop() {
      client.loop();
          if (dht_measure.check){
              dht_json= generateDhtJson(dht_measure);
-            //TODO:arreglar que si no mide tira excepcion el pub
-            pub(TOPICO_DHT, dht_json);
+            //arreglar que si no mide tira excepcion el pub
+           //limpiar array
+           memset(sec, 0, sizeof(sec));
+           memset(topic_dht, 0, sizeof(topic_dht));
+           secint=second();
+           sprintf(sec, "%d", secint);
+           strcpy(topic_dht, TOPICO_DHT);
+           strcat(topic_dht,sec);
+           Serial.println(topic_dht);
+           pub(topic_dht, dht_json);
           }
          
          if (pm_measure.check){
            pm_json=generatePmJson(pm_measure); 
-           pub(TOPICO_PMS, pm_json);
+           Serial.println(pm_json);
+           secint=second();
+           //limpiar array
+           memset(sec, 0, sizeof(sec));
+           memset(topic_pms, 0, sizeof(topic_pms));
+
+           sprintf(sec, "%d", secint);
+           strcpy(topic_pms, TOPICO_PMS);
+           strcat(topic_pms,sec);
+           Serial.println(topic_pms);
+           pub(topic_pms, pm_json);
         }
 
     }
 }
 
 String generatePmJson(pmsData measure){
-  //TODO: Agregar mac address y geolocalizacion
-  StaticJsonBuffer<300> jsonBuffer;
-  JsonObject& pms = jsonBuffer.createObject();
+
+StaticJsonBuffer<300> jsonBuffer;
+JsonObject& pms = jsonBuffer.createObject();
 
   pms["10_std"] = measure.pm10_standard;
   pms["25_std"] = measure.pm25_standard;
@@ -90,7 +115,7 @@ String generatePmJson(pmsData measure){
 
 
 String generateDhtJson(dht_med measure){
-  //TODO: Agregar mac address y geolocalizacion
+  
   StaticJsonBuffer<300> jsonBuffer;
   JsonObject& j_dht = jsonBuffer.createObject();
 

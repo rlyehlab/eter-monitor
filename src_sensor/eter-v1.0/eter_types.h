@@ -15,5 +15,4 @@ struct dht_med{
   float tem;
   float hum;
 };
-
 DHT dht(DHTPIN, DHTTYPE); 

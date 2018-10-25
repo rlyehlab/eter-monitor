@@ -34,8 +34,7 @@ void reconnect() {
       Serial.print("Failed connection");
       Serial.print(client.state());
       Serial.println(" trying again ...");
-      delay(5000);
-    }
+     }
   }
 }
 
@@ -65,7 +64,7 @@ void pub(char* topico, String msg){
   msg.toCharArray(mbuffer, msg.length()+1);
   Serial.print(msg);
 
-  if (!  client.publish(topico, mbuffer)) {
+  if (! client.publish(topico, mbuffer)) {
       Serial.println("\n We had a problem publishing");
     } else {
       Serial.println("\n Message sent!");

@@ -1,7 +1,7 @@
 const int PMArrayLength=31;
 //unsigned char buf2[PMArrayLength];
 
-pmsData pm_sensor(){
+pmsData pm_sensor_bck(){
   pmsData pm_measure;
   pm_measure.check = false; 
   if (Serial.find(0x42)) {
@@ -37,6 +37,40 @@ pmsData pm_sensor(){
   return pm_measure;
 }
 
+pmsData pm_sensor(){
+  pmsData pm_measure;
+  pm_measure.check = false; 
+
+//buscamos el 42
+if( Serial.find(0x42) ){
+    Serial.println("encontrado");
+    if( Serial.available() > 30 ){
+      uint8_t buffer[32];
+      uint16_t sum = 0;
+      Serial.readBytes(buffer,32);
+      if (checkValue(buffer, PMArrayLength)) {
+        pm_measure.check = true;
+        //----------------------------- STANDARD -----------------------------------------------//
+        pm_measure.pm10_standard = getData(3,4,buffer);
+        pm_measure.pm25_standard = getData(5,6,buffer);
+        pm_measure.pm100_standard  = getData(7,8,buffer);
+        //------------------------------------ ENVIRONMENT --------------------------------//
+        pm_measure.pm10_env  = getData(9,10,buffer);
+        pm_measure.pm25_env  = getData(11,12,buffer);
+        pm_measure.pm100_env  = getData(13,14,buffer);
+        return pm_measure;
+      }else{
+        Serial.print("checksum failed");
+      }
+    }else{
+      Serial.print("menos de 32 bytes");
+    }
+
+}
+
+
+  return pm_measure;
+}
 
 
 unsigned int getData(char high, char low, unsigned char *thebuf){

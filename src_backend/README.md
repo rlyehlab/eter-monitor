@@ -1,66 +1,44 @@
-# Eter MQTT to Postgresql Bridge
+# Eter - Puente MQTT a Postgresql
 
-## Run
+## Correr
 
     docker-compose up -d
 
-### Check logs
+### Ver registro
 
     docker-compose logs mqttpg
 
 
-## Setup
+### Apagar
 
-### Create tables
+    docker-compose down
 
-  docker exec -it eter_db /sql/import.sh
-
-### Delete database data
+### Borrar volúmenes de datos
 
   docker-compose down -v
 
 
-## Config
+## Instalación
 
-Configure via environment variables in .env file.
+### Crear tablas
 
-#### MQTT Broker
-IP address or name. Required, no default.-
+  docker exec -it eter_db /sql/import.sh
 
-MQTT_BROKER
+## Configurar
 
+El servidor se configura por medio de variables de entorno cargadas desde el archivo `.env`.
+El servidor ya funciona con la configuración default.
 
-#### MQTT Broker Port
-Default 1883
+`MQTT_BROKER` Dirección IP o nombre del servidor MQTT. Sin default. Requerido.
 
-MQTT_PORT
+`MQTT_PORT` Default 1883.
 
+`SUB_TOPIC` Topico MQTT base para la subscripción. Default ETER/#
 
-#### Subscribe Topic
-Topic base for subscription. Default RL/#
+`POSTGRES_HOST` Dirección IP o nombre del servidor de base de datos. Default db.
 
-SUB_TOPIC    
+`POSTGRES_DB` Base de datos. Default eter.
 
+`POSTGRES_USER` Usuario. Default eter.
 
-#### DB Host
-Ip address or name. Default db.
-
-POSTGRES_HOST
-
-
-#### DB Name
-Default eter.
-
-POSTGRES_DB
-
-
-#### DB User
-Default eter.
-
-POSTGRES_USER
-
-
-#### DB Pass
-Default empty string
-
-POSTGRES_PASSWORD
+`POSTGRES_PASSWORD` Contraseña. Default empty string.

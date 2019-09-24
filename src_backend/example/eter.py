@@ -4,10 +4,10 @@ import json
 # Speaking the ETER protocol 
 # Usage Example 
 #
-# # Connect
+# # Connect ( MQTT Server, port )
 # e = eter('broker.hivemq.com', 1883)
 # 
-# # Publish
+# # Publish ( Mac address, data type, value )
 # e.publish('MAC0000', 'integer', 42)
 #
 # # Listen (Edit on_connect and on_message)
